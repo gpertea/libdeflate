@@ -95,19 +95,23 @@
 	/* arm: including arm_neon.h requires hardware fp support */
 
 	/*
-	 * Prior to gcc 6.1 (r230411 for arm, r226563 for aarch64), NEON
-	 * and crypto intrinsics not available in the main target could not be
-	 * used in 'target' attribute functions.
+	 * Prior to gcc 6.1 (r230411 for arm, r226563 for aarch64), NEON,
+	 * crypto, and crc32 intrinsics not available in the main target could
+	 * not be used in 'target' attribute functions.
 	 *
-	 * clang as of 5.0.1 still doesn't allow it.  But, it does seem to allow
-	 * the pmull intrinsics if only __ARM_NEON is enabled.
+	 * clang support for them can be detected via __has_builtin(), except
+	 * that they only work when the main target has NEON support.
 	 */
 #    define COMPILER_SUPPORTS_NEON_TARGET_INTRINSICS	GCC_PREREQ(6, 1)
 #    ifdef __ARM_NEON
 #      define COMPILER_SUPPORTS_PMULL_TARGET_INTRINSICS	\
 		(GCC_PREREQ(6, 1) || __has_builtin(__builtin_neon_vmull_p64))
+#      define COMPILER_SUPPORTS_CRC32_TARGET_INTRINSICS	\
+		(GCC_PREREQ(6, 1) || __has_builtin(__builtin_arm_crc32b))
 #    else
 #      define COMPILER_SUPPORTS_PMULL_TARGET_INTRINSICS	\
+		(GCC_PREREQ(6, 1))
+#      define COMPILER_SUPPORTS_CRC32_TARGET_INTRINSICS	\
 		(GCC_PREREQ(6, 1))
 #    endif
 #  endif
