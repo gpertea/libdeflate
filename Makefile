@@ -182,6 +182,9 @@ $(SHARED_LIB_OBJ): %.shlib.o: %.c $(LIB_HEADERS) $(COMMON_HEADERS) .lib-cflags
 	$(QUIET_CC) $(CC) -o $@ -c $(CPPFLAGS) $(LIB_CFLAGS) \
 		$(SHARED_LIB_CFLAGS) -DLIBDEFLATE_DLL $<
 
+
+static: $(STATIC_LIB)
+
 # Create static library
 $(STATIC_LIB):$(STATIC_LIB_OBJ)
 	$(QUIET_AR) $(AR) cr $@ $+
